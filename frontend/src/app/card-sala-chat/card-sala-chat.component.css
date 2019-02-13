@@ -1,0 +1,19 @@
+  
+.example-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
+}
+
+.btn-agregarChat{
+  position: fixed;
+  left:95%;
+  right:0%;
+  bottom:0%;
+  top:88%;
+  z-index: 2400;
+}
+
+.expaciadorToolbar{
+  flex: 1 1 auto;
+}
+  
