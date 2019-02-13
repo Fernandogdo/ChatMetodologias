@@ -53,7 +53,7 @@
                 [(ngModel)]="messageContent" (keyup.enter)="sendMessage(messageContent)" autocomplete="off">
               <mat-hint align="end">{{inputMessage.value.length}}/140</mat-hint>
             </mat-form-field>
-            <button mat-fab (click)="addRoom()">
+            <button mat-fab (click)="addRoom()" *ngIf="isDocente">
               <mat-icon>add</mat-icon>
             </button>
           </div>

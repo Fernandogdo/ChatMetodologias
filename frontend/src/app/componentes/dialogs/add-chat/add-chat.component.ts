@@ -18,6 +18,7 @@ export class AddChatComponent implements OnInit {
 
   salaForm = this.fb.group({
     nombre: ['', Validators.required],
+    numero: ['', ],
   })
   ngOnInit() {
   }

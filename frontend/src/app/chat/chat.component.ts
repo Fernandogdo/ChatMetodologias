@@ -8,6 +8,7 @@ import {
   AfterViewInit
 } from '@angular/core';
 import { ChatService } from '../services/chat.service';
+import { DocenteService } from '../services/docente.service';
 import { ActivatedRoute } from "@angular/router";
 import { MensajeComponent } from '../mensaje/mensaje.component';
 import { createComponent } from '@angular/compiler/src/core';
@@ -43,7 +44,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   ioConnection: any;
   dialogRef: MatDialogRef<DialogUserComponent> | null;
   dialogRoom: MatDialogRef<AddChatComponent>;
-
+  isDocente:boolean = false;
 
   defaultDialogUserParams: any = {
     disableClose: true,
@@ -59,6 +60,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   constructor(
     private chatService: ChatService,
+    private docenteService: DocenteService,
     public dialog: MatDialog,
     private _Activatedroute: ActivatedRoute,
   ) {
@@ -68,6 +70,14 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.initModel();
+    this.docenteService.obtenerPerfil().subscribe(user=>{
+      if(user){
+        console.log(user);
+        this.isDocente =true;
+      }
+
+    })
+    
 
     setTimeout(() => {
       this.openUserPopup(this.defaultDialogUserParams);
