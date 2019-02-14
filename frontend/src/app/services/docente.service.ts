@@ -66,20 +66,21 @@ export class DocenteService {
     }
 
     obtenerPayload() {
-        var token = this.obtenerToken();
+        const token = this.obtenerToken();
         if (token) {
-            var payload = atob(token.split('.')[1]);
+            const payload = atob(token.split('.')[1]);
             return JSON.parse(payload);
-        }
-        else
+        } else {
             return null;
+        }
     }
 
     haIniciadoSesion() {
-        var payload = this.obtenerPayload();
-        if (payload)
+        const payload = this.obtenerPayload();
+        if (payload) {
             return payload.exp > Date.now() / 1000;
-        else
+        } else {
             return false;
+        }
     }
 }

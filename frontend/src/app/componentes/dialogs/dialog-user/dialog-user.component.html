@@ -1,15 +1,14 @@
-<h2 mat-dialog-title>{{params.title}}</h2>
-<form [formGroup]="salaForm">
+<h2 mat-dialog-title class="text-center">{{params.title}}</h2>
+<form [formGroup]="salaForm" >
 
-  <mat-dialog-content>
-    <mat-form-field>
+  <mat-dialog-content class="example-container">
+    <mat-form-field *ngIf="isEstudiante">
       <input matInput name="cedula" placeholder="Cedula" required formControlName="cedula" type="number">
       <mat-error>Este campo es requerido</mat-error>
       <mat-hint>Escriba nombre de la sala</mat-hint>
     </mat-form-field>
-    <br>
     <mat-form-field>
-      <input matInput name="username" placeholder="Nombres" [(ngModel)]="params.username" (keyup.enter)="onSave()"
+      <input matInput name="username" placeholder="Nombres" (keyup.enter)="onSave()"
         formControlName="usernameFormControl" required>
       <mat-error>Este campo es requerido</mat-error>
       <mat-hint>Por favor escriba su usuario</mat-hint>

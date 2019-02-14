@@ -57,14 +57,6 @@ body{
     background: #eceff1;
 }
 
-.mat-toolbar-row, .mat-toolbar-single-row{
-    height: 10% !important;
-}
-
-.mat-toolbar-multiple-rows {
-    min-height: 10% !important;
-}
-
 .btn-agregarChat{
     position: fixed;
     left:95%;

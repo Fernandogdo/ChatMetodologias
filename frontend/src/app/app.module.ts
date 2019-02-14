@@ -17,7 +17,6 @@ import { HomeComponent } from './home/home.component';
 import { TabsRegistroComponent } from './tabs-registro/tabs-registro.component';
 import { DashboardChatsComponent } from './dashboard-chats/dashboard-chats.component';
 import { VentanaModalComponent } from './ventana-modal/ventana-modal.component';
-import { MenuDashboardChatsDocenteComponent } from './menu-dashboard-chats-docente/menu-dashboard-chats-docente.component';
 import { GlosariosComponent } from './glosarios/glosarios.component';
 import { GlosarioService } from './services/glosario.service';
 import { UploadsComponent } from './uploads/uploads.component';
@@ -32,6 +31,8 @@ import { CardSalaChatComponent } from './card-sala-chat/card-sala-chat.component
 import { CrearGlosarioTerminoService } from './services/crear-glosario-termino.service';
 import { SalaChatComponent } from './componentes/sala-chat/sala-chat.component';
 import { AddChatComponent } from './componentes/dialogs/add-chat/add-chat.component';
+import { NavbarComponent } from './componentes/ui/navbar/navbar.component';
+import { ToastrModule } from 'ngx-toastr';
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,7 +42,6 @@ import { AddChatComponent } from './componentes/dialogs/add-chat/add-chat.compon
     TabsRegistroComponent,
     DashboardChatsComponent,
     VentanaModalComponent,
-    MenuDashboardChatsDocenteComponent,
     GlosariosComponent,
     UploadsComponent,
     ChatComponent,
@@ -51,7 +51,8 @@ import { AddChatComponent } from './componentes/dialogs/add-chat/add-chat.compon
     CardSalaChatComponent,
     EditarGlosarioComponent,
     SalaChatComponent,
-    AddChatComponent
+    AddChatComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
@@ -59,11 +60,16 @@ import { AddChatComponent } from './componentes/dialogs/add-chat/add-chat.compon
     routing,
     HttpClientModule,
     FormsModule,
-    BrowserAnimationsModule,
     SocketIoModule.forRoot(config),
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 10000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+    }),
   ],
   providers: [
     appRoutingProviders,
@@ -71,7 +77,7 @@ import { AddChatComponent } from './componentes/dialogs/add-chat/add-chat.compon
     GlosarioService,
     ChatService,
     GlosariosComponent,
-    CrearGlosarioTerminoService
+    CrearGlosarioTerminoService,
   ],
   entryComponents: [
     MensajeComponent,

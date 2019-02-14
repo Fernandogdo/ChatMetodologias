@@ -22,6 +22,7 @@ import { MatDialog, MatDialogRef, MatList, MatListItem } from '@angular/material
 import { Observable, Subscription } from 'rxjs';
 import { AddChatComponent } from '../../componentes/dialogs/add-chat/add-chat.component';
 import { ActivatedRoute } from '@angular/router';
+import { DocenteService } from '../../services/docente.service';
 
 
 const AVATAR_URL = 'https://api.adorable.io/avatars/285';
@@ -42,6 +43,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
   ioConnection: any;
   dialogRef: MatDialogRef<DialogUserComponent> | null;
   dialogRoom: MatDialogRef<AddChatComponent>;
+  isProfesor:boolean=false;
 
 
   defaultDialogUserParams: any = {
@@ -58,13 +60,18 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
 
   constructor(
     private chatService: ChatService,
+    private docenteService: DocenteService,
     public dialog: MatDialog,
     public route: ActivatedRoute,
   ) {
     
   }
-  
-  
+
+  verificarProfesor() {
+    if (this.docenteService.haIniciadoSesion()) {
+      this.isProfesor = true;
+    } 
+  }
   ngOnInit(): void {
     this.initModel();
 

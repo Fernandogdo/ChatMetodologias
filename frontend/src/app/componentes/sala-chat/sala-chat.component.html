@@ -22,7 +22,7 @@
 
     <div class="app-content">
 
-      <button mat-fab (click)="onClickUserInfo()">
+      <button mat-fab (click)="onClickUserInfo()" *ngIf="isProfesor">
         <mat-icon>person</mat-icon>
       </button>
 

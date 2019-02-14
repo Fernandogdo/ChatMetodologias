@@ -1,0 +1,17 @@
+<mat-toolbar class="bg-turquesa" *ngIf="isLogin">
+  <mat-toolbar-row>
+    <span>Bienvenido, {{nombreDocente | titlecase}}</span>
+    <span class="expaciadorToolbar"></span>
+    <div>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="cerrarSesion()">
+          <mat-icon>lock</mat-icon>
+          <span>Cerrar sesión</span>
+        </button>
+      </mat-menu>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>

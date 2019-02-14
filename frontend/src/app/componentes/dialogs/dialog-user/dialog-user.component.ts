@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormControl, Validators, FormBuilder } from '@angular/forms';
+import { DocenteService } from '../../../services/docente.service';
 
 @Component({
   selector: 'app-dialog-user',
@@ -11,6 +12,7 @@ export class DialogUserComponent implements OnInit {
 
   // usernameFormControl = new FormControl('', [Validators.required]);
   previousUsername: string;
+  isEstudiante: boolean = true;
 
 
   salaForm = this.fb.group({
@@ -19,17 +21,31 @@ export class DialogUserComponent implements OnInit {
   })
   constructor(
     private fb: FormBuilder,
+    private docenteService: DocenteService,
     public dialogRef: MatDialogRef<DialogUserComponent>,
     @Inject(MAT_DIALOG_DATA) public params: any) {
     this.previousUsername = params.username ? params.username : undefined;
   }
 
   ngOnInit() {
+    this.verificarProfesor();
+  }
+
+  verificarProfesor() {
+    let nombre = this.docenteService.obtenerNombresDocente();
+    let apellido = this.docenteService.ObtenerApellidosDocente();
+    if (this.docenteService.haIniciadoSesion()) {
+      this.salaForm.get('usernameFormControl').setValue(nombre + ' ' + apellido);
+      this.isEstudiante = false;
+      this.onSave();
+    } else {
+      this.salaForm.get('usernameFormControl').setValue(this.params.username);
+    }
   }
 
   public onSave(): void {
     this.dialogRef.close({
-      username: this.params.username,
+      username: this.salaForm.value.usernameFormControl,
       dialogType: this.params.dialogType,
       previousUsername: this.previousUsername
     });

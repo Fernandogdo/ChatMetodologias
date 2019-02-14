@@ -5,6 +5,7 @@ import { SalaChat } from '../models/salaChat';
 import { GlosarioService } from '../services/glosario.service';
 import { Router } from "@angular/router";
 import { GlosarioTermino } from '../models/glosarioTermino';
+import { DocenteService } from '../services/docente.service';
 
 @Component({
   selector: 'app-glosarios',
@@ -15,12 +16,14 @@ export class GlosariosComponent implements OnInit {
 
   private nombreChat: String;
   private chat: SalaChat;
+  private nombreDocente: string;
   private glosarioTermino: GlosarioTermino;
   private arrayGlosarioTermino: Array <GlosarioTermino> = new Array <GlosarioTermino>() ; 
 
   constructor(
     public dialog: MatDialog,
     private glosarioService: GlosarioService,
+    private docenteService: DocenteService,
     private router: Router
   ) {
     this.chat = new SalaChat('', '');
@@ -29,6 +32,7 @@ export class GlosariosComponent implements OnInit {
 
   ngOnInit() {
     this.chat.docente = localStorage.getItem('idDocente');
+
     this.glosarioService.guardarSalaChat(this.chat).subscribe(
       response => {
         localStorage.setItem('idChatCreado', response['chatAlmacenado']['_id']);

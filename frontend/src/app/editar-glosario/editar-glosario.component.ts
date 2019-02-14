@@ -8,7 +8,9 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { GlosarioTermino } from '../models/glosarioTermino';
 import { CrearGlosarioTerminoService } from '../services/crear-glosario-termino.service';
 import { DocenteService } from '../services/docente.service';
-
+import { Validators, FormBuilder } from '@angular/forms';
+import { ChatService } from './../services/chat.service';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-editar-glosario',
   templateUrl: './editar-glosario.component.html',
@@ -20,15 +22,24 @@ export class EditarGlosarioComponent implements OnInit {
   private glosarioTermino: GlosarioTermino;
   private arrayGlosarioTermino: Array<GlosarioTermino> = new Array<GlosarioTermino>();
   private nombre: String;
+  isValid: boolean = false;
+
+  salaForm = this.fb.group({
+    nombre: ['', Validators.required],
+    numero: ['', Validators.required],
+  })
+
   constructor(
     public dialog: MatDialog,
     private glosarioService: GlosarioService,
     private salaChatService: SalaChatService,
+    private chatService: ChatService,
     private router: Router,
     private _Activatedroute: ActivatedRoute,
     private crearGlosarioTerminoService: CrearGlosarioTerminoService,
     private docenteService: DocenteService,
-
+    private fb: FormBuilder,
+    private toastr: ToastrService
   ) {
     this.chat = new SalaChat('', '');
     this.glosarioTermino = new GlosarioTermino('', '', '');
@@ -37,7 +48,6 @@ export class EditarGlosarioComponent implements OnInit {
   ngOnInit() {
 
     this.nombre = this.docenteService.obtenerNombresDocente() + " " + this.docenteService.ObtenerApellidosDocente();
-
     if (this._Activatedroute.snapshot.params['idChat'] == undefined) {
       this.chat.docente = localStorage.getItem('idDocente');
       this.glosarioService.guardarSalaChat(this.chat).subscribe(
@@ -61,6 +71,24 @@ export class EditarGlosarioComponent implements OnInit {
         }
       )
 
+  }
+
+  salaChat() {
+    this.chatService.nuevaSala(this.salaForm.value.nombre)
+  }
+
+  addSala() {
+    this.chat.nombreChat = this.salaForm.value.nombre;
+    this.chat.docente = localStorage.getItem('idDocente');
+    this.chat._id = localStorage.getItem('idChatCreado');
+    this.glosarioService.actualizarSalaChat(this.chat).subscribe(
+      response => {
+        this.toastr.success('Hello world!', 'Toastr fun!')
+      },
+      error => {
+        console.log(<any>error);
+      }
+    )
   }
 
   modal(): void {
@@ -102,6 +130,9 @@ export class EditarGlosarioComponent implements OnInit {
       response => {
         //this.nombreChat = response;
         this.chat.nombreChat = response['salaEncontrada'][0]['nombreChat'];
+        this.salaForm.get('nombre').setValue(this.chat.nombreChat);
+ 
+
       },
       error => {
         alert("error");
