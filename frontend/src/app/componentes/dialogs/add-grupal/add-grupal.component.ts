@@ -19,19 +19,21 @@ export class AddGrupalComponent implements OnInit {
   ) { }
 
   salaForm = this.fb.group({
-    nombre: ['', Validators.required],
+    // nombre: ['', Validators.required],
     numero: ['', Validators.required],
   })
   ngOnInit() {
     this.conectados = this.data.conectados;
   }
-  addSala(){
-    const sala={
+  addSala() {
+    const participantes = this.salaForm.value.numero;
+    const sala = {
       idChat: this.data.idChat,
-      nombre: this.salaForm.value.nombre,
-      numero: this.salaForm.value.numero,
+      // nombre: this.salaForm.value.nombre,
+      // numero: this.salaForm.value.numero,
     }
-    this.chatService.guardarSalaGrupal(sala);
+    for (let i = 1; i <= participantes; i++) {
+      this.chatService.guardarSalaGrupal(sala);
+    }
   }
-
 }
