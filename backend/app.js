@@ -36,7 +36,7 @@ app.use('/api/salaChat/', chatRoutes);
 app.use('/api/glosario/', glosarioRoutes);
 
 var contadorUsuarios = 0;
-const documents = {};
+const clientes = {};
 
 // contadorUsuarios++;
 io.on("connection", (socket) => {
@@ -55,11 +55,23 @@ io.on("connection", (socket) => {
     socket.on('mensaje', (obj) => {
         // sending to all clients in 'sala' room, including sender
         io.in(obj.sala).emit('mensaje',obj.message);
-        console.log(socket.rooms)
+        io.in(obj.sala).clients((err, clients) => {
+            console.log(clients.length);
+        });
+        
+        
     });
+    socket.on('contador', (obj) => {
+        io.in(obj.sala).clients((err, clients) => {
+            console.log(clients.length); 
+            io.in(obj.sala).emit('contador',clients);
+        });
+    });
+ 
     socket.on("disconnect", () => {
         console.log('desconectado');
     });
+
 
 });
 

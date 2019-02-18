@@ -225,6 +225,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
       content: message,
       sala: this.sala,
     });
+
     this.messageContent = null;
   }
 
