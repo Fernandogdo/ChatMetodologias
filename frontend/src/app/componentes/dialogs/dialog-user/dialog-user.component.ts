@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormControl, Validators, FormBuilder } from '@angular/forms';
-import { DocenteService } from '../../../services/docente.service';
+import { Validators, FormBuilder } from '@angular/forms';
+import { DocenteService } from '../../../servicios/docente/docente.service';
 
 @Component({
   selector: 'app-dialog-user',

@@ -1,7 +1,7 @@
 export class GlosarioTermino {
-  _id: String;
+  _id?: String;
   chat: String;
-  termino: String;
+  termino?: any;
   descripcion: String;
   
   constructor(_id: String, termino: String, descripcion: String){

@@ -7,6 +7,8 @@ const glosario = require('../controllers/glosario');
 router.post('/agregarTerminoGlosario', glosario.agregarTerminoGlosario);
 router.post('/listarTerminosGlosario', glosario.listarTerminosGlosario);
 router.post('/eliminarTerminoGlosario', glosario.eliminarTerminoGlosario);
+router.post('/obtenerTermino', glosario.obtenerTermino);
+router.put('/actualizarTermino', glosario.actualizarTermino);
 
 
 /*

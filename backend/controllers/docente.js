@@ -2,12 +2,14 @@
 
 const Docente = require('../models/docente');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const passport = require('passport');
 
 const controller = {
     guardarDocente: function (req, res) {
         var docente = new Docente();
         var params = req.body;
+        console.log(req)
         docente.nombres = params.nombres;
         docente.apellidos = params.apellidos;
         docente.email = params.email;
@@ -40,7 +42,12 @@ const controller = {
     },
 
     obtenerPerfil:function(req, res, next) {
-        res.json({ text:"ingresado22" });
+        var params = req.body;
+        Docente.findOne({ "_id": mongoose.Types.ObjectId(params.idDocente) }, function (err, docente) {
+            if (err) return res.status(500).send({ message: "Error al recurperar la información del docente." });
+            if (!docente) return res.status(404).send({ message: "No se ha podido encontrar el docente." });
+            return res.status(200).send(docente);
+        });
     },
 
     /*

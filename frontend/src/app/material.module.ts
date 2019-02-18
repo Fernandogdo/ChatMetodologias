@@ -14,6 +14,9 @@ import {
     MatToolbarModule,
     MatMenuModule,
     MatGridListModule,
+    MatTableModule,
+    MatSnackBarModule,
+    MatTooltipModule,
 } from '@angular/material';
 
 @NgModule({
@@ -31,7 +34,9 @@ import {
         MatTabsModule,
         MatMenuModule,
         MatGridListModule,
-
+        MatTableModule,
+        MatSnackBarModule,
+        MatTooltipModule,
     ],
     exports: [
         MatTabsModule,
@@ -45,6 +50,9 @@ import {
         MatSidenavModule,
         MatToolbarModule,
         MatMenuModule,
+        MatTableModule,
+        MatSnackBarModule,
+        MatTooltipModule,
     ],
     declarations: [],
     providers: [

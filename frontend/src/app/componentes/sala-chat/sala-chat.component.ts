@@ -7,7 +7,7 @@ import {
   ViewChildren,
   AfterViewInit
 } from '@angular/core';
-import { ChatService } from '../../services/chat.service';
+import { ChatService } from './../../servicios/chat/chat.service';
 // import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 //modelos
 import { Message } from '../../models/message';
@@ -18,12 +18,15 @@ import { User } from '../../models/user';
 import { DialogUserComponent } from '../../componentes/dialogs/dialog-user/dialog-user.component';
 import { DialogUserType } from '../../componentes/dialogs/dialog-user/dialog-user-type';
 //angular material
-import { MatDialog, MatDialogRef, MatList, MatListItem } from '@angular/material';
-import { Observable, Subscription } from 'rxjs';
+import { MatDialog, MatDialogRef, MatList, MatListItem, MatTableDataSource } from '@angular/material';
 import { AddChatComponent } from '../../componentes/dialogs/add-chat/add-chat.component';
-import { ActivatedRoute } from '@angular/router';
-import { DocenteService } from '../../services/docente.service';
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { DocenteService } from './../../servicios/docente/docente.service';
+import { SalaChatService } from '../../servicios/sala-chat/sala-chat.service';
+import { GlosarioService } from '../../servicios/glosario/glosario.service';
+import { AddGrupalComponent } from '../dialogs/add-grupal/add-grupal.component';
+import { SalaChat } from '../../models/salaChat';
+import { AddTerminoComponent } from '../dialogs/add-termino/add-termino.component';
 
 const AVATAR_URL = 'https://api.adorable.io/avatars/285';
 @Component({
@@ -42,8 +45,13 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
   messageContent: string;
   ioConnection: any;
   dialogRef: MatDialogRef<DialogUserComponent> | null;
-  dialogRoom: MatDialogRef<AddChatComponent>;
-  isProfesor:boolean=false;
+  dialogRoom: MatDialogRef<AddGrupalComponent>;
+  dialogTermino: MatDialogRef<AddTerminoComponent>;
+  isProfesor: boolean = false;
+  salas: SalaChat[] = [];
+
+  displayedColumns: string[] = ['termino', 'descripcion'];
+  dataSource = new MatTableDataSource();
 
 
   defaultDialogUserParams: any = {
@@ -57,33 +65,50 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
   @ViewChild(MatList, { read: ElementRef }) matList: ElementRef;
 
   @ViewChildren(MatListItem, { read: ElementRef }) matListItems: QueryList<MatListItem>;
+  idChat: any;
+  salaNombre: string;
 
   constructor(
     private chatService: ChatService,
+    private salaChatService: SalaChatService,
+    private glosarioService: GlosarioService,
     private docenteService: DocenteService,
     public dialog: MatDialog,
     public route: ActivatedRoute,
+    public router: Router,
   ) {
-    
+
   }
 
   verificarProfesor() {
-    if (this.docenteService.haIniciadoSesion()) {
-      this.isProfesor = true;
-    } 
+    this.docenteService.obtenerPerfil().subscribe(user => {
+      if (user) {
+        this.isProfesor = true;
+      } else {
+        this.isProfesor = false;
+      }
+    });
   }
   ngOnInit(): void {
+    this.idChat = this.route.snapshot.params['id'];
+    this.obtenerDatos();
     this.initModel();
+    this.verificarProfesor();
 
     if (this.route.snapshot.params['id'] != undefined) {
       this.chatService.nuevaSala(this.route.snapshot.params['id']);
-      this.sala=this.route.snapshot.params['id'];
+      this.sala = this.route.snapshot.params['id'];
     }
+
 
 
     setTimeout(() => {
       this.openUserPopup(this.defaultDialogUserParams);
     }, 0);
+  }
+  salaGrupal(id) {
+    this.router.navigate([`sala/${id}`]);
+
   }
 
   ngAfterViewInit(): void {
@@ -98,6 +123,20 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
     } catch (err) {
     }
   }
+  obtenerDatos() {
+    const sala = {
+      chat: this.idChat
+    }
+    this.salaChatService.obtenerNombreSalaChat(this.idChat).subscribe(chat => {
+      this.salaNombre = chat.salaEncontrada.nombreChat;
+      this.glosarioService.listarTerminosGlosario(sala).subscribe(terminos => {
+        this.dataSource.data = terminos.terminosGlosarioAlmacenados;
+      })
+    })
+    this.salaChatService.listarSalasGrupal(this.idChat).subscribe(res => {
+      this.salas = res;
+    })
+  }
 
   private initModel(): void {
     const randomId = this.getRandomId();
@@ -110,8 +149,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
 
     this.ioConnection = this.chatService.getMessagesSala(this.sala)
       .subscribe((message: Message) => {
-        console.log(message);
-        
+
         this.messages.push(message);
 
       });
@@ -142,6 +180,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
     });
   }
 
+
   private openUserPopup(params): void {
     this.dialogRef = this.dialog.open(DialogUserComponent, params);
     this.dialogRef.afterClosed().subscribe(paramsDialog => {
@@ -160,7 +199,20 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
   }
 
   addRoom() {
-    this.dialogRoom = this.dialog.open(AddChatComponent);
+    this.dialogRoom = this.dialog.open(AddGrupalComponent, {
+      data: { idChat: this.idChat }
+    });
+    this.dialogRoom.afterClosed().subscribe(result => {
+      this.obtenerDatos();
+    });
+  }
+  modal() {
+    this.dialogTermino = this.dialog.open(AddTerminoComponent, {
+      data: { idChat: this.idChat },
+    });
+    this.dialogTermino.afterClosed().subscribe(() => {
+      this.obtenerDatos();
+    });
   }
 
   public sendMessage(message: string): void {
@@ -168,7 +220,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.chatService.sendMsgSala(this.sala,{
+    this.chatService.sendMsgSala(this.sala, {
       from: this.user,
       content: message,
       sala: this.sala,
@@ -196,7 +248,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
       };
     }
 
-    this.chatService.sendMsgSala(this.sala,message);
+    this.chatService.sendMsgSala(this.sala, message);
   }
 
 

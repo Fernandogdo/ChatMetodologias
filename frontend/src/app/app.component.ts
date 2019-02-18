@@ -1,29 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { DocenteService } from './services/docente.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
-  title = 'proyectoAngular';
-  isLogin = false;
-  constructor(
-    private docenteService: DocenteService,
-  ) { 
-    this.verificarLogin();
-  }
-
-
-  ngOnInit() {
-
-  }
-  verificarLogin() {
-    if (this.docenteService.obtenerPayload()) {
-      this.isLogin = true;
-    }
-  }
+export class AppComponent {
+  title = 'chat-uptl';
 }
-
-

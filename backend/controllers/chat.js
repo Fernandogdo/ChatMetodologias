@@ -1,6 +1,7 @@
 'use strict'
 
 const Chat = require('../models/chat');
+const Grupal = require('../models/grupal');
 const Glosario = require('../models/glosario');
 const mongoose = require('mongoose');
 
@@ -39,19 +40,31 @@ const controller = {
     guardarSalaChat: function (req, res) {
         var chat = new Chat();
         var params = req.body;
+        console.log(req.body);
+
         chat.docente = mongoose.Types.ObjectId(params.docente);
         chat.nombreChat = params.nombreChat;
         let fechaActual = new Date();
-        let dia = fechaActual.getDate();
-        let mes = parseInt(fechaActual.getMonth())+1;
-        let anio = fechaActual.getFullYear();
-        chat.fecha = anio+'-'+mes+'-'+dia;
+        chat.fecha = fechaActual;
 
         chat.save((err, chatAlmacenado) => {
             if (err) return res.status(500).send({ message: "Error al almacenar la información del chat." });
             if (!chatAlmacenado) return res.status(404).send({ message: "No se ha podido almacenar la información del chat." });
             return res.status(200).send({ 'chatAlmacenado': chatAlmacenado });
         });
+    },
+    guardarSalaGrupal: function (req, res) {
+        var chat = new Grupal();
+        var params = req.body;
+        chat.chat = mongoose.Types.ObjectId(params.idChat);
+        chat.nombre = params.nombre;
+        chat.numero = params.numero;
+        chat.fecha = new Date();
+        chat.save((err, sala) => {
+            if (err) return res.status(500).send({ message: "Error al almacenar la información del chat." });
+            if (!sala) return res.status(404).send({ message: "No se ha podido almacenar la información del chat." });
+            return res.status(200).send(sala);
+    });
     },
 
     actualizarSalaChat: function (req, res) {
@@ -83,10 +96,18 @@ const controller = {
 
     obtenerNombreSalaChat: function (req, res) {
         var params = req.body;
-        Chat.find({"_id": mongoose.Types.ObjectId(params.idChat)}, function (err, salaEncontrada) {
+        Chat.findOne({ "_id": mongoose.Types.ObjectId(params.idChat) }, function (err, salaEncontrada) {
             if (err) return res.status(500).send({ message: "Error al recurperar la información de las salas de chat." });
             if (!salaEncontrada) return res.status(404).send({ message: "No se ha podido encontrar el nombre de la sala de chat." });
             return res.status(200).send({ 'salaEncontrada': salaEncontrada });
+        });
+    },
+    obtenerSalasGrupal: function (req, res) {
+        var params = req.body;
+        Grupal.find({ "chat": params.chat }, function (err, sala) {
+            if (err) return res.status(500).send({ message: "Error al recurperar la información de las salas de chat." });
+            if (!sala) return res.status(404).send({ message: "No se ha podido encontrar salas de chat asociadas al docente." });
+            return res.status(200).send(sala);
         });
     },
 
