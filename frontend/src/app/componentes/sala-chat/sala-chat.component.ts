@@ -27,6 +27,7 @@ import { GlosarioService } from '../../servicios/glosario/glosario.service';
 import { AddGrupalComponent } from '../dialogs/add-grupal/add-grupal.component';
 import { SalaChat } from '../../models/salaChat';
 import { AddTerminoComponent } from '../dialogs/add-termino/add-termino.component';
+import { log } from 'util';
 
 const AVATAR_URL = 'https://api.adorable.io/avatars/285';
 @Component({
@@ -67,6 +68,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
   @ViewChildren(MatListItem, { read: ElementRef }) matListItems: QueryList<MatListItem>;
   idChat: any;
   salaNombre: string;
+  conectados: number;
 
   constructor(
     private chatService: ChatService,
@@ -91,6 +93,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
   }
   ngOnInit(): void {
     this.idChat = this.route.snapshot.params['id'];
+
     this.obtenerDatos();
     this.initModel();
     this.verificarProfesor();
@@ -153,6 +156,10 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
         this.messages.push(message);
 
       });
+    this.chatService.getConectados().subscribe(count => {
+      this.conectados = count;
+
+    });
 
 
     this.chatService.onEvent(Event.CONNECT)
@@ -200,7 +207,10 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
 
   addRoom() {
     this.dialogRoom = this.dialog.open(AddGrupalComponent, {
-      data: { idChat: this.idChat }
+      data: { 
+        idChat: this.idChat,
+        conectados: this.conectados,
+      }
     });
     this.dialogRoom.afterClosed().subscribe(result => {
       this.obtenerDatos();

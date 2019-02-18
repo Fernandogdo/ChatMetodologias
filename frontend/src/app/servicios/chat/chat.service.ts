@@ -51,6 +51,12 @@ export class ChatService {
         map(data => data)
       )
   }
+  getConectados(): Observable<any> {
+    return this.socket
+      .fromEvent<any>('contador').pipe(
+        map(data => data)
+      )
+  }
 
   public send(message: Message): void {
     this.socket.emit('message', message);
@@ -61,6 +67,13 @@ export class ChatService {
       'message': message
     }
     this.socket.emit('mensaje', obj);
+  }
+
+  public clientesConectados(sala): void {
+    let obj = {
+      'sala': sala,
+    }
+    this.socket.emit('contador', obj);
   }
 
   public onMessage(): Observable<Message> {

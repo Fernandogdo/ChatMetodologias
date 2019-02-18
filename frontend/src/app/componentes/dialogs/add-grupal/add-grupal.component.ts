@@ -9,6 +9,7 @@ import { SalaChatService } from '../../../servicios/sala-chat/sala-chat.service'
   styleUrls: ['./add-grupal.component.scss']
 })
 export class AddGrupalComponent implements OnInit {
+  conectados: number;
   constructor(
     private fb: FormBuilder,
     // private chatService: ChatService,
@@ -22,6 +23,7 @@ export class AddGrupalComponent implements OnInit {
     numero: ['', Validators.required],
   })
   ngOnInit() {
+    this.conectados = this.data.conectados;
   }
   addSala(){
     const sala={

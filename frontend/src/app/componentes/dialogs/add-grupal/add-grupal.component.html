@@ -1,5 +1,6 @@
 <h2 mat-dialog-title>Agregar Sala Grupal</h2>
 <form [formGroup]="salaForm">
+  <p>Estudiantes conectados: {{conectados}}</p>
   <mat-dialog-content>
     <mat-form-field>
       <input matInput placeholder="Nombre" required formControlName="nombre">

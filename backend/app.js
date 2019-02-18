@@ -53,20 +53,13 @@ io.on("connection", (socket) => {
         socket.join(sala);
     });
     socket.on('mensaje', (obj) => {
-        // sending to all clients in 'sala' room, including sender
         io.in(obj.sala).emit('mensaje',obj.message);
         io.in(obj.sala).clients((err, clients) => {
             console.log(clients.length);
-        });
-        
-        
-    });
-    socket.on('contador', (obj) => {
-        io.in(obj.sala).clients((err, clients) => {
-            console.log(clients.length); 
-            io.in(obj.sala).emit('contador',clients);
+            io.in(obj.sala).emit('contador', clients.length);
         });
     });
+
  
     socket.on("disconnect", () => {
         console.log('desconectado');
