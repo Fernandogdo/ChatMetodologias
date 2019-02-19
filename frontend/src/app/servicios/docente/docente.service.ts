@@ -4,6 +4,7 @@ import { Docente } from '../../models/docente';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { MatSnackBar } from '@angular/material';
 
 @Injectable()
 export class DocenteService {
@@ -16,7 +17,8 @@ export class DocenteService {
 
   constructor(
     private _http: HttpClient,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar,
   ) {
     this.url = `${environment.url}/api/`;
   }
@@ -25,7 +27,7 @@ export class DocenteService {
   guardarDocente(docente: Docente) {
     this._http.post<Docente>(this.url + 'guardarDocente', docente, this.httpOptions).subscribe(res => {
       console.log('guardado!');
-    }, error => console.log(error)
+    }, error => this.openSnackBar(error.message)
     )
   }
 
@@ -33,8 +35,14 @@ export class DocenteService {
     this._http.post<Docente>(this.url + 'consultarDocenteIngreso', docente, this.httpOptions).subscribe(res => {
       this.iniciarSesionDocente(res);
       this.router.navigate(['/dashboard']);
-    }, error => console.log(error)
+    }, error => this.openSnackBar(error.error.message)
     )
+  }
+  openSnackBar(message: string) {
+    this.snackBar.open(message, 'ERROR', {
+      panelClass: ['red-snackbar'],
+      duration: 2000,
+    })
   }
   obtenerToken() {
     return localStorage.getItem('token');
@@ -73,7 +81,7 @@ export class DocenteService {
 
   cerrarSesionDocente() {
     localStorage.clear();
-    this.router.navigate(['/login']);    
+    this.router.navigate(['/login']);
   }
 
   obtenerPayload() {

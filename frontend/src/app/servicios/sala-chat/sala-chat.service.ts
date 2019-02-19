@@ -83,6 +83,21 @@ export class SalaChatService {
         this.openSnackBar('Nombre sala actualizado correctamente!', 'Exito!');
       }
     );
+  } 
+
+  actualizarChatGrupal(chat: SalaChat) {
+    this._http.put(this.url + '/actualizarChatGrupal', chat, this.httpOptions).subscribe(
+      res => {
+        this.openSnackBar('Nombre sala actualizado correctamente!', 'Exito!');
+      }
+    );
+  };
+
+  eliminarChatGrupal(id) {
+    let sala = { '_id': id };
+    this._http.post(this.url + '/eliminarChatGrupal', sala, this.httpOptions).subscribe(ref => {
+      this.openSnackBar('Sala grupal eliminada correctamente!', 'Exito!');
+    });
   }
 
   openSnackBar(message: string, action: string) {

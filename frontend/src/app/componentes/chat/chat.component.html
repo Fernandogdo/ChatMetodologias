@@ -51,7 +51,7 @@
             <mat-form-field class="chat-input">
               <input matInput #inputMessage maxlength="140" placeholder="Escribe tu mensaje"
                 [(ngModel)]="messageContent" (keyup.enter)="sendMessage(messageContent)" autocomplete="off">
-              <mat-hint align="end">{{inputMessage.value.length}}/140</mat-hint>
+              <mat-hint [align]="'end'">{{inputMessage.value.length}}/140</mat-hint>
             </mat-form-field>
             <button mat-fab (click)="addRoom()" *ngIf="isDocente">
               <mat-icon>add</mat-icon>

@@ -28,6 +28,7 @@ import { AddGrupalComponent } from '../dialogs/add-grupal/add-grupal.component';
 import { SalaChat } from '../../models/salaChat';
 import { AddTerminoComponent } from '../dialogs/add-termino/add-termino.component';
 import { log } from 'util';
+import { EditSalaComponent } from '../dialogs/edit-sala/edit-sala.component';
 
 const AVATAR_URL = 'https://api.adorable.io/avatars/285';
 @Component({
@@ -48,6 +49,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
   dialogRef: MatDialogRef<DialogUserComponent> | null;
   dialogRoom: MatDialogRef<AddGrupalComponent>;
   dialogTermino: MatDialogRef<AddTerminoComponent>;
+  dialogGrupal: MatDialogRef<EditSalaComponent>;
   isProfesor: boolean = false;
   salas: SalaChat[] = [];
 
@@ -109,10 +111,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
       this.openUserPopup(this.defaultDialogUserParams);
     }, 0);
   }
-  salaGrupal(id) {
-    this.router.navigate([`sala/${id}`]);
 
-  }
 
   ngAfterViewInit(): void {
     // subscribing to any changes in the list of items / messages
@@ -126,6 +125,24 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
     } catch (err) {
     }
   }
+
+  actualizarChat(sala) {
+    this.dialogGrupal = this.dialog.open(EditSalaComponent, {
+      data: {
+        idChat: sala._id,
+        nombre: sala.nombre,
+      }
+    });
+    this.dialogGrupal.afterClosed().subscribe(result => {
+      this.obtenerDatos();
+    });
+
+  }
+  eliminarChat(id) {
+    this.salaChatService.eliminarChatGrupal(id);
+    this.obtenerDatos();
+  }
+ 
   obtenerDatos() {
     const sala = {
       chat: this.idChat
@@ -207,7 +224,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
 
   addRoom() {
     this.dialogRoom = this.dialog.open(AddGrupalComponent, {
-      data: { 
+      data: {
         idChat: this.idChat,
         conectados: this.conectados,
       }

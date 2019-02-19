@@ -26,6 +26,7 @@ import { EditTerminoComponent } from './componentes/dialogs/edit-termino/edit-te
 import { CommonModule } from '@angular/common';
 import { AddGrupalComponent } from './componentes/dialogs/add-grupal/add-grupal.component';
 import { SalaGrupalComponent } from './componentes/sala-grupal/sala-grupal.component';
+import { EditSalaComponent } from './componentes/dialogs/edit-sala/edit-sala.component';
 const config: SocketIoConfig = { url: environment.url, options: {} };
 
 @NgModule({
@@ -42,6 +43,7 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     EditTerminoComponent,
     AddGrupalComponent,
     SalaGrupalComponent,
+    EditSalaComponent,
 
   ],
   imports: [
@@ -71,6 +73,7 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     AddTerminoComponent,
     EditTerminoComponent,
     AddGrupalComponent,
+    EditSalaComponent,
   ]
 })
 export class AppModule { }

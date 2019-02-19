@@ -37,8 +37,8 @@
         <mat-card class="mt-4 ml-4">
           <mat-card-header class="d-flex">
             <mat-card-title>Glosario</mat-card-title>
-            <button mat-icon-button (click)="modal()" class="ml-auto">
-              <mat-icon>library_add</mat-icon>
+            <button mat-icon-button (click)="modal()" class="ml-auto" *ngIf="isProfesor">
+              <mat-icon color="primary">library_add</mat-icon>
             </button>
           </mat-card-header>
           <mat-card-content>
@@ -57,18 +57,24 @@
             </table>
           </mat-card-content>
         </mat-card>
-
         <mat-card class="ml-4 mt-5" *ngIf="isProfesor">
           <mat-list>
             <h3 mat-subheader>Salas Grupales</h3>
-            <mat-list-item *ngFor="let sala of salas" (click)="salaGrupal(sala._id)">
-              <mat-icon mat-list-icon>chat</mat-icon>
-              <h4 mat-line>{{sala.nombre}}</h4>
-              <p mat-line class="text-muted">Nro. Participantes: {{sala.numero}}</p>
+            <mat-list-item *ngFor="let sala of salas">
+              <h3 mat-line> {{sala.nombre}}</h3>
+              <p mat-line>
+                <a [routerLink]="['/sala', sala._id]" class="enlace"
+                  target="_blank">http://localhost:4200/sala/{{sala._id}}</a>
+              </p>
+              <button mat-icon-button (click)="actualizarChat(sala)">
+                <mat-icon class="mat-24" color="primary">edit</mat-icon>
+              </button>
+              <button mat-icon-button (click)="eliminarChat(sala._id)">
+                <mat-icon class="mat-24" color="warn">delete</mat-icon>
+              </button>
               <mat-divider></mat-divider>
             </mat-list-item>
           </mat-list>
-
         </mat-card>
       </div>
       <div>

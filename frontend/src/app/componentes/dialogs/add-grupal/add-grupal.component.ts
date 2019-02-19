@@ -27,12 +27,14 @@ export class AddGrupalComponent implements OnInit {
   }
   addSala() {
     const participantes = this.salaForm.value.numero;
-    const sala = {
-      idChat: this.data.idChat,
-      // nombre: this.salaForm.value.nombre,
-      // numero: this.salaForm.value.numero,
-    }
+  
     for (let i = 1; i <= participantes; i++) {
+      const sala = {
+        idChat: this.data.idChat,
+        nombre: `Grupo ${i}`,
+        // numero: this.salaForm.value.numero,
+        // url: this.salaForm.value.numero,
+      }
       this.chatService.guardarSalaGrupal(sala);
     }
   }

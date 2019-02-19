@@ -110,7 +110,22 @@ const controller = {
             return res.status(200).send(sala);
         });
     },
-
+    eliminarChatGrupal: function (req, res) {
+        var params = req.body;
+        Grupal.findOneAndDelete({ "_id": params._id }, function (err, chat) {
+            if (err) console.log(err);
+            if (!chat) return res.status(404).send({ message: "No se ha encontrado sala grupal." });
+            return res.status(200).send(chat);
+        });
+    },
+    actualizarChatGrupal: function (req, res) {
+        var params = req.body;
+        Grupal.findOneAndUpdate({ "_id": mongoose.Types.ObjectId(params._id) }, params, { new: true }, function (err, chat) {
+            if (err) return res.status(500).send({ message: "Error al actualizar la información del chat." });
+            if (!chat) return res.status(404).send({ message: "No se ha podido almacenar la información actualizada del chat." });
+            return res.status(200).send(chat);
+        });
+    },
 
 };
 
