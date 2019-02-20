@@ -2,6 +2,7 @@
 
 const Chat = require('../models/chat');
 const Grupal = require('../models/grupal');
+const Mensaje = require('../models/mensaje');
 const Glosario = require('../models/glosario');
 const mongoose = require('mongoose');
 
@@ -59,6 +60,7 @@ const controller = {
         chat.chat = mongoose.Types.ObjectId(params.idChat);
         chat.nombre = params.nombre;
         chat.numero = params.numero;
+        chat.avatar = params.avatar;
         chat.fecha = new Date();
         chat.save((err, sala) => {
             if (err) return res.status(500).send({ message: "Error al almacenar la información del chat." });
@@ -108,6 +110,15 @@ const controller = {
             if (err) return res.status(500).send({ message: "Error al recurperar la información de las salas de chat." });
             if (!sala) return res.status(404).send({ message: "No se ha podido encontrar salas de chat asociadas al docente." });
             return res.status(200).send(sala);
+        });
+    },
+    obtenerMensajes: function (req, res) {
+        var params = req.body;
+        console.log(params);
+        Mensaje.find({ "chat": params.chat }).sort('fecha').exec( function (err, mensajes) {
+            if (err) return res.status(500).send({ message: "Error al recurperar mensajes." });
+            if (!mensajes) return res.status(404).send({ message: "No se ha podido encontrar mensajes." });
+            return res.status(200).send(mensajes);
         });
     },
     eliminarChatGrupal: function (req, res) {

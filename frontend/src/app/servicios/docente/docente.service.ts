@@ -78,6 +78,11 @@ export class DocenteService {
     localStorage.setItem('nombresDocente', docente.nombresDocente);
     localStorage.setItem('apellidosDocente', docente.apellidosDocente);
   }
+  setChatParams(user) {
+    localStorage.setItem('username', user.username);
+    localStorage.setItem('idUser', user.idUser);
+    localStorage.setItem('avatar', user.avatar);
+  }
 
   cerrarSesionDocente() {
     localStorage.clear();

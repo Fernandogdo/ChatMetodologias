@@ -71,6 +71,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
   idChat: any;
   salaNombre: string;
   conectados: number;
+  users: [];
 
   constructor(
     private chatService: ChatService,
@@ -95,7 +96,20 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
   }
   ngOnInit(): void {
     this.idChat = this.route.snapshot.params['id'];
-
+    this.salaChatService.obtenerMensajes(this.idChat).subscribe(mensajes => {
+      const messages: any = mensajes;
+      messages.forEach(mensaje => {
+        const men: Message = {
+          from: {
+            avatar: mensaje.avatar,
+            id: 488660,
+            name: mensaje.username,
+          }, content: mensaje.mensaje
+        }
+        this.messages.push(men);
+      });
+    })
+    // this.chatService.nuevaSalaGrupal(this.idChat);
     this.obtenerDatos();
     this.initModel();
     this.verificarProfesor();
@@ -121,6 +135,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
   }
   private scrollToBottom(): void {
     try {
+      // console.log('scroll');
       this.matList.nativeElement.scrollTop = this.matList.nativeElement.scrollHeight;
     } catch (err) {
     }
@@ -142,7 +157,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
     this.salaChatService.eliminarChatGrupal(id);
     this.obtenerDatos();
   }
- 
+
   obtenerDatos() {
     const sala = {
       chat: this.idChat
@@ -169,12 +184,13 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
 
     this.ioConnection = this.chatService.getMessagesSala(this.sala)
       .subscribe((message: Message) => {
-
         this.messages.push(message);
-
+        this.scrollToBottom();
+   
       });
-    this.chatService.getConectados().subscribe(count => {
-      this.conectados = count;
+    this.chatService.getConectados().subscribe(users => {
+      this.users = users;
+      this.conectados = users.length;
 
     });
 

@@ -5,10 +5,6 @@
         <mat-icon mat-list-icon>dashboard</mat-icon>
         <span mat-line>Dashboard</span>
       </a>
-      <!-- <a mat-list-item [routerLink]="[ '/confChat' ]" target="_blank">
-        <mat-icon mat-list-icon>book</mat-icon>
-        <span mat-line>Glosario</span>
-      </a> -->
     </mat-nav-list>
   </mat-sidenav>
 
@@ -34,55 +30,64 @@
 
 
       <div class="col-md-3">
-        <mat-card class="mt-4 ml-4">
-          <mat-card-header class="d-flex">
-            <mat-card-title>Glosario</mat-card-title>
-            <button mat-icon-button (click)="modal()" class="ml-auto" *ngIf="isProfesor">
-              <mat-icon color="primary">library_add</mat-icon>
-            </button>
-          </mat-card-header>
-          <mat-card-content>
+        <mat-card class="ml-4 mt-5">
+          <mat-tab-group mat-align-tabs="center">
+            <mat-tab label="Conectados">
+              <p matLine class="mt-2"><strong>Usuarios conectados: </strong>{{conectados}} </p>
+              <mat-list>
+                <mat-list-item *ngFor="let user of users">
+                  <img matListAvatar src="/assets/imagenes/no-user.png">
+                  <h3 matLine>{{user}}</h3>
+                </mat-list-item>
+              </mat-list>
+            </mat-tab>
+            <mat-tab label="Salas" *ngIf="isProfesor">
+              <mat-list>
+                <mat-list-item *ngFor="let sala of salas">
+                  <h3 mat-line> {{sala.nombre}}</h3>
+                  <p mat-line>
+                    <a [routerLink]="['/sala', sala._id]" class="enlace" target="_blank">http://localhost:4200/sala/{{sala._id}}</a>
+                  </p>
+                  <button mat-icon-button (click)="actualizarChat(sala)">
+                    <mat-icon class="mat-24" color="primary">edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="eliminarChat(sala._id)">
+                    <mat-icon class="mat-24" color="warn">delete</mat-icon>
+                  </button>
+                  <mat-divider></mat-divider>
+                </mat-list-item>
+              </mat-list>
+            </mat-tab>
+            <mat-tab label="Glosario">
+              <mat-card-header class="d-flex" *ngIf="isProfesor">
+                <button mat-mini-fab (click)="modal()" color="primary" class="btn" *ngIf="isProfesor">
+                  <mat-icon>library_add</mat-icon>
+                </button>
+              </mat-card-header>
+              <div class="example-container">
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                  <ng-container matColumnDef="termino">
+                    <th mat-header-cell *matHeaderCellDef> Término </th>
+                    <td mat-cell *matCellDef="let terminos"> {{terminos.termino}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="descripcion">
+                    <th mat-header-cell *matHeaderCellDef> Descripción </th>
+                    <td mat-cell *matCellDef="let terminos"> {{terminos.descripcion}} </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+              </div>
+            </mat-tab>
 
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-              <ng-container matColumnDef="termino">
-                <th mat-header-cell *matHeaderCellDef> Término </th>
-                <td mat-cell *matCellDef="let terminos"> {{terminos.termino}} </td>
-              </ng-container>
-              <ng-container matColumnDef="descripcion">
-                <th mat-header-cell *matHeaderCellDef> Descripción </th>
-                <td mat-cell *matCellDef="let terminos"> {{terminos.descripcion}} </td>
-              </ng-container>
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
-          </mat-card-content>
-        </mat-card>
-        <mat-card class="ml-4 mt-5" *ngIf="isProfesor">
-          <mat-list>
-            <h3 mat-subheader>Salas Grupales</h3>
-            <mat-list-item *ngFor="let sala of salas">
-              <h3 mat-line> {{sala.nombre}}</h3>
-              <p mat-line>
-                <a [routerLink]="['/sala', sala._id]" class="enlace"
-                  target="_blank">http://localhost:4200/sala/{{sala._id}}</a>
-              </p>
-              <button mat-icon-button (click)="actualizarChat(sala)">
-                <mat-icon class="mat-24" color="primary">edit</mat-icon>
-              </button>
-              <button mat-icon-button (click)="eliminarChat(sala._id)">
-                <mat-icon class="mat-24" color="warn">delete</mat-icon>
-              </button>
-              <mat-divider></mat-divider>
-            </mat-list-item>
-          </mat-list>
+          </mat-tab-group>
         </mat-card>
       </div>
       <div>
         <div class="col-md-9 chat-container">
           <mat-card class="main-card">
-            <mat-list class="chat-list">
-              <mat-list-item *ngFor="let message of messages"
-                [ngClass]="[(message.action === undefined && message.from.id === user.id)? 'chat-list-item': '']">
+            <mat-list class="chat-list" #scrollMe>
+              <mat-list-item *ngFor="let message of messages" [ngClass]="[(message.action === undefined && message.from.id === user.id)? 'chat-list-item': '']">
                 <img mat-list-avatar *ngIf="message.action === undefined" [src]="message.from.avatar">
                 <h4 mat-line *ngIf="message.action === undefined">
                   <b>{{message.from.name}}</b>
@@ -102,8 +107,8 @@
             <div class="chat-footer-container">
               <mat-icon>message</mat-icon>
               <mat-form-field class="chat-input">
-                <input matInput #inputMessage maxlength="140" placeholder="Escribe tu mensaje"
-                  [(ngModel)]="messageContent" (keyup.enter)="sendMessage(messageContent)" autocomplete="off">
+                <input matInput #inputMessage maxlength="140" placeholder="Escribe tu mensaje" [(ngModel)]="messageContent"
+                  (keyup.enter)="sendMessage(messageContent)" autocomplete="off">
                 <mat-hint [align]="'end'">{{inputMessage.value.length}}/140</mat-hint>
               </mat-form-field>
             </div>

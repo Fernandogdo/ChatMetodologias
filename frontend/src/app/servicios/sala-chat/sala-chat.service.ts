@@ -65,6 +65,12 @@ export class SalaChatService {
     let params = JSON.stringify(infoChat);
     return this._http.post(this.url + '/obtenerNombreSalaChat', params, this.httpOptions);
   }
+  obtenerMensajes(id){
+    const params = {
+      chat: id,
+    }
+    return this._http.post(this.url + '/obtenerMensajes', params, this.httpOptions);
+  }
 
   guardarSalaChat(chat) {
     let salaChat = {

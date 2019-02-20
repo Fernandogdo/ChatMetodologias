@@ -10,13 +10,16 @@ const passport = require('passport');
 const morgan = require('morgan');
 const app = express();
 var http = require('http').createServer(app)
+const Mensaje = require('./models/mensaje');
 
 var io = require('socket.io')(http);
 
 const router = express.Router();
 
 //Middlewares
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 app.use(bodyParser.json());
 app.use(morgan('dev'))
 app.use(express.json());
@@ -49,17 +52,34 @@ io.on("connection", (socket) => {
     });
 
     socket.on('nuevoRoom', sala => {
-        console.log('Nueva sala: ',sala)
+        console.log('Nueva sala: ', sala)
         socket.join(sala);
     });
     socket.on('mensaje', (obj) => {
-        io.in(obj.sala).emit('mensaje',obj.message);
+        // obj.message.from.id = socket.id;
+        obj.client = socket.id;
+        io.in(obj.sala).emit('mensaje', obj.message);
+
+        console.log(socket.id);
+        console.log(obj);
+        // if (obj.message.content) {
+        //     var mensaje = new Mensaje();
+        //     mensaje.chat = obj.sala;
+        //     mensaje.mensaje = obj.message.content;
+        //     mensaje.username = obj.message.from.name;
+        //     mensaje.avatar =  obj.message.from.avatar;
+        //     mensaje.fecha = new Date();
+
+        //     mensaje.save(mensaje);
+        // }
+
+
         io.in(obj.sala).clients((err, clients) => {
-            io.in(obj.sala).emit('contador', clients.length);
+            io.in(obj.sala).emit('contador', clients);
         });
     });
 
- 
+
     socket.on("disconnect", () => {
         console.log('desconectado');
     });

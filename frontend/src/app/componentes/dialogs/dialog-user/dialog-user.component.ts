@@ -38,12 +38,17 @@ export class DialogUserComponent implements OnInit {
       this.salaForm.get('usernameFormControl').setValue(nombre + ' ' + apellido);
       this.isEstudiante = false;
       this.onSave();
+    } else if (localStorage.getItem('username') && !this.docenteService.haIniciadoSesion()){
+      this.salaForm.get('usernameFormControl').setValue(localStorage.getItem('username'));
+      this.salaForm.get('cedula').setValue(localStorage.getItem('cedula'));
     } else {
       this.salaForm.get('usernameFormControl').setValue(this.params.username);
     }
   }
 
   public onSave(): void {
+    localStorage.setItem('username', this.salaForm.value.usernameFormControl);
+    localStorage.setItem('cedula', this.salaForm.value.cedula);
     this.dialogRef.close({
       username: this.salaForm.value.usernameFormControl,
       dialogType: this.params.dialogType,
