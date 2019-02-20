@@ -17,18 +17,18 @@
   height: 100%;
 }
 
-.enlace {
-  font-size: 0.7rem;
-}
-
 .chat-input {
   padding-top: 20px;
-  padding-left: 10px;
-  width: 90%;
+  width: 80%;
 }
 
-table {
-  width: 100%;
+.chat-list {
+  overflow: auto;
+  position: absolute;
+  top: 20px;
+  left: 25px;
+  right: 25px;
+  bottom: 210px;
 }
 
 .btn {
@@ -36,23 +36,14 @@ table {
   right: 30px;
   top: 13px;
 }
-
-.example-container {
-  height: 30rem;
-  overflow: auto;
+.btn2 {
+  position: hidden;
+  top: 100px;
 }
 
-.contenedor {
-  overflow: auto;
-}
 
-.chat-list {
-  overflow: auto;
-  position: absolute;
-  top: 0px;
-  left: 25px;
-  right: 25px;
-  bottom: 150px;
+table {
+  width: 100%
 }
 
 .chat-list-item {
@@ -67,8 +58,8 @@ table {
 }
 
 .chat-footer-container {
-  position: absolute;
-  bottom: 5rem;
+  position: fixed;
+  bottom: 25px;
   left: 25px;
   right: 25px;
 }

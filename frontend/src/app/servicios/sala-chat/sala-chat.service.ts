@@ -65,6 +65,10 @@ export class SalaChatService {
     let params = JSON.stringify(infoChat);
     return this._http.post(this.url + '/obtenerNombreSalaChat', params, this.httpOptions);
   }
+  obtenerSalaGrupal(idChat): Observable<any> {
+    let infoChat = { 'idChat': idChat };
+    return this._http.post(this.url + '/obtenerSalaGrupal', infoChat, this.httpOptions);
+  }
   obtenerMensajes(id){
     const params = {
       chat: id,

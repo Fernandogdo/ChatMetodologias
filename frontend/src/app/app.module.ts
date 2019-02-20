@@ -29,6 +29,9 @@ import { SalaGrupalComponent } from './componentes/sala-grupal/sala-grupal.compo
 import { EditSalaComponent } from './componentes/dialogs/edit-sala/edit-sala.component';
 const config: SocketIoConfig = { url: environment.url, options: {} };
 
+import { DeviceDetectorModule } from 'ngx-device-detector';
+import { TerminosComponent } from './componentes/dialogs/terminos/terminos.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,6 +47,7 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     AddGrupalComponent,
     SalaGrupalComponent,
     EditSalaComponent,
+    TerminosComponent,
 
   ],
   imports: [
@@ -56,6 +60,7 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     ReactiveFormsModule,
     HttpClientModule,
     SocketIoModule.forRoot(config),
+    DeviceDetectorModule.forRoot(),
   ],
   providers: [
     DocenteService,
@@ -74,6 +79,7 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     EditTerminoComponent,
     AddGrupalComponent,
     EditSalaComponent,
+    TerminosComponent,
   ]
 })
 export class AppModule { }

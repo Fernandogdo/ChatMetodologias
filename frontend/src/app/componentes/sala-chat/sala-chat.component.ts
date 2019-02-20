@@ -27,8 +27,8 @@ import { GlosarioService } from '../../servicios/glosario/glosario.service';
 import { AddGrupalComponent } from '../dialogs/add-grupal/add-grupal.component';
 import { SalaChat } from '../../models/salaChat';
 import { AddTerminoComponent } from '../dialogs/add-termino/add-termino.component';
-import { log } from 'util';
 import { EditSalaComponent } from '../dialogs/edit-sala/edit-sala.component';
+import { TerminosComponent } from '../dialogs/terminos/terminos.component';
 
 const AVATAR_URL = 'https://api.adorable.io/avatars/285';
 @Component({
@@ -50,6 +50,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
   dialogRoom: MatDialogRef<AddGrupalComponent>;
   dialogTermino: MatDialogRef<AddTerminoComponent>;
   dialogGrupal: MatDialogRef<EditSalaComponent>;
+  dialogGlosario: MatDialogRef<TerminosComponent>;
   isProfesor: boolean = false;
   salas: SalaChat[] = [];
 
@@ -126,6 +127,14 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
+  terminosModal() {
+    const sala = {
+      sala: this.idChat
+    }
+    this.dialogGlosario = this.dialog.open(TerminosComponent, {
+      data: sala
+    });
+  }
 
   ngAfterViewInit(): void {
     // subscribing to any changes in the list of items / messages

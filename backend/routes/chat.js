@@ -12,6 +12,7 @@ router.put('/actualizarSalaChat', ChatController.actualizarSalaChat);
 router.post('/listarSalasChat', ChatController.listarSalasChat);
 router.post('/obtenerNombreSalaChat', ChatController.obtenerNombreSalaChat);
 router.post('/obtenerSalasGrupal', ChatController.obtenerSalasGrupal);
+router.post('/obtenerSalaGrupal', ChatController.obtenerSalaGrupal);
 router.post('/obtenerMensajes', ChatController.obtenerMensajes);
 router.post('/eliminarChatGrupal', ChatController.eliminarChatGrupal);
 router.put('/actualizarChatGrupal', ChatController.actualizarChatGrupal);

@@ -37,7 +37,7 @@ export class DialogUserComponent implements OnInit {
     if (this.docenteService.haIniciadoSesion()) {
       this.salaForm.get('usernameFormControl').setValue(nombre + ' ' + apellido);
       this.isEstudiante = false;
-      this.onSave();
+      setTimeout(() => this.onSave());
     } else if (localStorage.getItem('username') && !this.docenteService.haIniciadoSesion()){
       this.salaForm.get('usernameFormControl').setValue(localStorage.getItem('username'));
       this.salaForm.get('cedula').setValue(localStorage.getItem('cedula'));

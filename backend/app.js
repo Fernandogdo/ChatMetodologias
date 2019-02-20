@@ -60,18 +60,17 @@ io.on("connection", (socket) => {
         obj.client = socket.id;
         io.in(obj.sala).emit('mensaje', obj.message);
 
-        console.log(socket.id);
-        console.log(obj);
-        // if (obj.message.content) {
-        //     var mensaje = new Mensaje();
-        //     mensaje.chat = obj.sala;
-        //     mensaje.mensaje = obj.message.content;
-        //     mensaje.username = obj.message.from.name;
-        //     mensaje.avatar =  obj.message.from.avatar;
-        //     mensaje.fecha = new Date();
+        // console.log(socket.id);
+        if (obj.message.content) {
+            var mensaje = new Mensaje();
+            mensaje.chat = obj.sala;
+            mensaje.mensaje = obj.message.content;
+            mensaje.username = obj.message.from.name;
+            mensaje.avatar =  obj.message.from.avatar;
+            mensaje.fecha = new Date();
 
-        //     mensaje.save(mensaje);
-        // }
+            mensaje.save(mensaje);
+        }
 
 
         io.in(obj.sala).clients((err, clients) => {

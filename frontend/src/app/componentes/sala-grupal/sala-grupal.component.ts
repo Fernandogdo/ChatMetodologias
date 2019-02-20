@@ -17,11 +17,15 @@ import { User } from '../../models/user';
 //dialogs
 import { DialogUserType } from '../../componentes/dialogs/dialog-user/dialog-user-type';
 //angular material
-import { MatDialog, MatDialogRef, MatList, MatListItem } from '@angular/material';
+import { MatDialog, MatDialogRef, MatList, MatListItem, MatTableDataSource } from '@angular/material';
 import { AddChatComponent } from '../../componentes/dialogs/add-chat/add-chat.component';
 import { ActivatedRoute } from '@angular/router';
 import { DocenteService } from '../../servicios/docente/docente.service';
 import { DialogUserComponent } from '../dialogs/dialog-user/dialog-user.component';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { SalaChatService } from '../../servicios/sala-chat/sala-chat.service';
+import { TerminosComponent } from '../dialogs/terminos/terminos.component';
+import { GlosarioService } from 'src/app/servicios/glosario/glosario.service';
 
 
 const AVATAR_URL = 'https://api.adorable.io/avatars/285';
@@ -40,8 +44,10 @@ export class SalaGrupalComponent implements OnInit, AfterViewInit {
   messageContent: string;
   ioConnection: any;
   dialogRef: MatDialogRef<DialogUserComponent> | null;
-  dialogRoom: MatDialogRef<AddChatComponent>;
+  dialogRoom: MatDialogRef<TerminosComponent>;
   isProfesor: boolean = false;
+  displayedColumns: string[] = ['termino', 'descripcion'];
+  dataSource = new MatTableDataSource();
 
 
   defaultDialogUserParams: any = {
@@ -55,12 +61,20 @@ export class SalaGrupalComponent implements OnInit, AfterViewInit {
   @ViewChild(MatList, { read: ElementRef }) matList: ElementRef;
 
   @ViewChildren(MatListItem, { read: ElementRef }) matListItems: QueryList<MatListItem>;
+  deviceInfo: any;
+  isMobile: boolean = false;
+  chat: any;
+  conectados: number;
+  users: [];
+
 
   constructor(
     private chatService: ChatService,
-    private docenteService: DocenteService,
+    private salaChatService: SalaChatService,
+    private glosarioService: GlosarioService,
     public dialog: MatDialog,
     public route: ActivatedRoute,
+    private deviceService: DeviceDetectorService
   ) {
 
   }
@@ -68,6 +82,26 @@ export class SalaGrupalComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.initModel();
+    this.comprobarDispositivo();
+    this.sala = this.route.snapshot.params['id'];
+    this.salaChatService.obtenerSalaGrupal(this.sala).subscribe(sala=>{
+      this.chat = sala.chat;
+      this.salaChatService.obtenerMensajes(this.sala).subscribe(mensajes => {
+        const messages: any = mensajes;
+        messages.forEach(mensaje => {
+          const men: Message = {
+            from: {
+              avatar: mensaje.avatar,
+              id: 488660,
+              name: mensaje.username,
+            }, content: mensaje.mensaje
+          }
+          this.messages.push(men);
+        });
+      })
+      this.cargarDatos();
+    })
+
 
     if (this.route.snapshot.params['id'] != undefined) {
       this.chatService.nuevaSalaGrupal(this.route.snapshot.params['id']);
@@ -78,6 +112,22 @@ export class SalaGrupalComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.openUserPopup(this.defaultDialogUserParams);
     }, 0);
+  }
+  comprobarDispositivo() {
+    this.deviceInfo = this.deviceService.getDeviceInfo();
+    const isMobile = this.deviceService.isMobile();
+    const isTablet = this.deviceService.isTablet();
+    if (isTablet || isMobile) {
+      this.isMobile = true;
+    }
+  }
+  terminosModal(){
+    const sala = {
+      sala: this.chat
+    }
+    this.dialogRoom = this.dialog.open(TerminosComponent, {
+      data: sala
+    });
   }
 
   ngAfterViewInit(): void {
@@ -92,6 +142,14 @@ export class SalaGrupalComponent implements OnInit, AfterViewInit {
     } catch (err) {
     }
   }
+  cargarDatos(){
+    const sala = {
+      chat: this.chat
+    }
+    this.glosarioService.listarTerminosGlosario(sala).subscribe(terminos => {
+      this.dataSource.data = terminos.terminosGlosarioAlmacenados;
+    });
+  }
 
   private initModel(): void {
     const randomId = this.getRandomId();
@@ -105,6 +163,12 @@ export class SalaGrupalComponent implements OnInit, AfterViewInit {
     this.ioConnection = this.chatService.getMessagesSala(this.sala)
       .subscribe((message: Message) => {
         this.messages.push(message);
+
+        this.chatService.getConectados().subscribe(users => {
+          this.users = users;
+          this.conectados = users.length;
+
+        });
       });
 
 
@@ -150,9 +214,7 @@ export class SalaGrupalComponent implements OnInit, AfterViewInit {
     });
   }
 
-  addRoom() {
-    this.dialogRoom = this.dialog.open(AddChatComponent);
-  }
+
 
   public sendMessage(message: string): void {
     if (!message) {
