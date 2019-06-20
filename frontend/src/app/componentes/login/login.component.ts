@@ -25,8 +25,8 @@ export class LoginComponent implements OnInit {
     this.registroForm = this.fb.group({
       nombres: ['', Validators.required],
       apellidos: ['', Validators.required],
-      email: ['', Validators.required],
-      password: ['', Validators.required],
+      email: ['',[Validators.required, Validators.email]],
+      password: ['', Validators.pattern(/^[a-z0-9_-]{6,18}$/)],
     })
   }
   login(){
@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
     console.log(this.registroForm.value);
     this.docenteService.guardarDocente(this.registroForm.value)
   }
-  resetForm() {
+  resetForm(){
     this.loginForm.reset();
   }
 }

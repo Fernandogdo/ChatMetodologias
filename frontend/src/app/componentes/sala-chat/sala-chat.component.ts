@@ -95,6 +95,7 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
   ngOnInit(): void {
     this.idChat = this.route.snapshot.params['id'];
     this.salaChatService.obtenerMensajes(this.idChat).subscribe(mensajes => {
@@ -119,7 +120,6 @@ export class SalaChatComponent implements OnInit, AfterViewInit {
       this.chatService.nuevaSala(this.route.snapshot.params['id']);
       this.sala = this.route.snapshot.params['id'];
     }
-
 
 
     setTimeout(() => {

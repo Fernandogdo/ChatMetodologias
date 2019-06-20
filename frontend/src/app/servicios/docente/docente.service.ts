@@ -26,8 +26,9 @@ export class DocenteService {
 
   guardarDocente(docente: Docente) {
     this._http.post<Docente>(this.url + 'guardarDocente', docente, this.httpOptions).subscribe(res => {
-      console.log('guardado!');
-    }, error => this.openSnackBar(error.message)
+      // console.log('guardado!');
+      this.openSnackBar("Se ha guerdado su información satisfactoriamente")
+    }, error => this.openSnackBar("El email ingresado ya se encuentra registrado, ingrese uno nuevo")
     )
   }
 
